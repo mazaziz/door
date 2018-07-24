@@ -26,6 +26,6 @@ class Router(object):
             found = pair[0].search(req.path)
             if found is None:
                 continue
-            req.named = found.groupdict
+            req.named = found.groupdict()
             return pair[1]
         return None
