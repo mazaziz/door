@@ -6,7 +6,7 @@ from door.serializers import *
 from door.errors import *
 import door.utils
 
-class Api(object):
+class Application(object):
     __slots__ = ("router", "serializers")
     def __init__(self, router=None):
         self.router = router if router is not None else Router()
