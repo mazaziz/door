@@ -1,8 +1,12 @@
 import re
-from door.http import Request
+from door.request import Request
+from door.error import HttpNotFound
 
 class Router(object):
-    __slots__ = ("static", "pattern")
+    __slots__ = (
+        "static",
+        "pattern"
+    )
     def __init__(self):
         self.static = {}
         self.pattern = []
@@ -15,7 +19,7 @@ class Router(object):
         elif isinstance(route, re._pattern_type):
             self.pattern.append((route, handler))
         else:
-            raise Exception("invalid route type {}".format(type(route)))
+            raise Exception("invalid route type [{}]".format(type(route)))
     
     def match(self, req: Request) -> callable:
         try:
@@ -28,4 +32,4 @@ class Router(object):
                 continue
             req.named = found.groupdict()
             return pair[1]
-        return None
+        raise HttpNotFound(reason="RouteNotFound")

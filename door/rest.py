@@ -1,11 +1,13 @@
-from door.http import Request, Response, METHODS
-from door.errors import *
+from door.request import Request
+from door.response import Response
+import door.http
+import door.error
 
 class RestHandler(object):
     __slots__ = ("handlers")
     def __init__(self):
         self.handlers = {}
-        for method in METHODS:
+        for method in door.http.METHODS:
             attr = "on_{}".format(method.lower())
             try:
                 handler = getattr(self, attr)
@@ -20,5 +22,5 @@ class RestHandler(object):
         try:
             handler = self.handlers[req.method]
         except KeyError:
-            raise HttpMethodNotAllowed(self.handlers.keys())
+            raise door.error.HttpMethodNotAllowed(self.handlers.keys())
         handler(req, resp)

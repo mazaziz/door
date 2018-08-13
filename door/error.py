@@ -1,5 +1,3 @@
-from door.http import Request, Response
-
 class HttpError(Exception):
     __slots__ = ("code", "message", "reason")
     def __init__(self, code, message=None, reason=None):
