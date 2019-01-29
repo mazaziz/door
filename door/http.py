@@ -1,57 +1,226 @@
-from .util import fqn
+METHOD_CONNECT = "CONNECT"
+METHOD_DELETE = "DELETE"
+METHOD_GET = "GET"
+METHOD_HEAD = "HEAD"
+METHOD_OPTIONS = "OPTIONS"
+METHOD_PATCH = "PATCH"
+METHOD_POST = "POST"
+METHOD_PUT = "PUT"
+METHOD_TRACE = "TRACE"
 
 METHODS = (
-    "CONNECT",
-    "DELETE",
-    "GET",
-    "HEAD",
-    "OPTIONS",
-    "PATCH",
-    "POST",
-    "PUT"
+    METHOD_CONNECT,
+    METHOD_DELETE,
+    METHOD_GET,
+    METHOD_HEAD,
+    METHOD_OPTIONS,
+    METHOD_PATCH,
+    METHOD_POST,
+    METHOD_PUT,
+    METHOD_TRACE
 )
 
-STATUS_CODES = {
+STATUS_MAPPING = {
     200: "200 OK",
     201: "201 Created",
-    405: "405 Method Not Allowed",
+    202: "202 Accepted",
+    203: "203 Non-Authoritative Information",
+    204: "204 No Content",
+    205: "205 Reset Content",
+    206: "206 Partial Content",
+    207: "207 Multi-Status",
+    208: "208 Multi-Status",
+    226: "226 IM Used",
+    300: "300 Multiple Choice",
     301: "301 Moved Permanently",
+    302: "302 Found",
+    303: "303 See Other",
+    304: "304 Not Modified",
+    307: "307 Temporary Redirect",
+    308: "308 Permanent Redirect",
     400: "400 Bad Request",
     401: "401 Unauthorized",
+    402: "402 Payment Required",
     403: "403 Forbidden",
     404: "404 Not Found",
     405: "405 Method Not Allowed",
+    406: "406 Not Acceptable",
+    407: "407 Proxy Authentication Required",
+    408: "408 Request Timeout",
     409: "409 Conflict",
+    410: "410 Gone",
+    411: "411 Length Required",
+    412: "412 Precondition Failed",
+    413: "413 Payload Too Large",
+    414: "414 URI Too Long",
     415: "415 Unsupported Media Type",
+    416: "416 Requested Range Not Satisfiable",
+    417: "417 Expectation Failed",
+    418: "418 I'm a teapot",
+    421: "421 Misdirected Request",
+    422: "422 Unprocessable Entity",
+    423: "423 Locked",
+    424: "424 Failed Dependency",
+    425: "425 Too Early",
+    426: "426 Upgrade Required",
+    428: "428 Precondition Required",
     429: "429 Too Many Requests",
+    431: "431 Request Header Fields Too Large",
+    451: "451 Unavailable For Legal Reasons",
     500: "500 Internal Server Error",
-    503: "503 Service Unavailable"
+    501: "501 Not Implemented",
+    502: "502 Bad Gateway",
+    503: "503 Service Unavailable",
+    504: "504 Gateway Timeout",
+    505: "505 HTTP Version Not Supported",
+    506: "506 Variant Also Negotiates",
+    507: "507 Insufficient Storage",
+    508: "508 Loop Detected",
+    510: "510 Not Extended",
+    511: "511 Network Authentication Required"
 }
 
-class Request:
-    def __init__(self, env: dict):
-        self.env = env
-        self.path = env["PATH_INFO"]
-        self.method = env["REQUEST_METHOD"]
+STATUS_200_OK = 200
+STATUS_201_CREATED = 201
+STATUS_202_ACCEPTED = 202
+STATUS_203_NON_AUTHORITATIVE_INFORMATION = 203
+STATUS_204_NO_CONTENT = 204
+STATUS_205_RESET_CONTENT = 205
+STATUS_206_PARTIAL_CONTENT = 206
+STATUS_207_MULTI_STATUS = 207
+STATUS_208_MULTI_STATUS = 208
+STATUS_226_IM_USED = 226
+STATUS_300_MULTIPLE_CHOICE = 300
+STATUS_301_MOVED_PERMANENTLY = 301
+STATUS_302_FOUND = 302
+STATUS_303_SEE_OTHER = 303
+STATUS_304_NOT_MODIFIED = 304
+STATUS_307_TEMPORARY_REDIRECT = 307
+STATUS_308_PERMANENT_REDIRECT = 308
+STATUS_400_BAD_REQUEST = 400
+STATUS_401_UNAUTHORIZED = 401
+STATUS_402_PAYMENT_REQUIRED = 402
+STATUS_403_FORBIDDEN = 403
+STATUS_404_NOT_FOUND = 404
+STATUS_405_METHOD_NOT_ALLOWED = 405
+STATUS_406_NOT_ACCEPTABLE = 406
+STATUS_407_PROXY_AUTHENTICATION_REQUIRED = 407
+STATUS_408_REQUEST_TIMEOUT = 408
+STATUS_409_CONFLICT = 409
+STATUS_410_GONE = 410
+STATUS_411_LENGTH_REQUIRED = 411
+STATUS_412_PRECONDITION_FAILED = 412
+STATUS_413_PAYLOAD_TOO_LARGE = 413
+STATUS_414_URI_TOO_LONG = 414
+STATUS_415_UNSUPPORTED_MEDIA_TYPE = 415
+STATUS_416_REQUESTED_RANGE_NOT_SATISFIABLE = 416
+STATUS_417_EXPECTATION_FAILED = 417
+STATUS_418_I_AM_A_TEAPOT = 418
+STATUS_421_MISDIRECTED_REQUEST = 421
+STATUS_422_UNPROCESSABLE_ENTITY = 422
+STATUS_423_LOCKED = 423
+STATUS_424_FAILED_DEPENDENCY = 424
+STATUS_425_TOO_EARLY = 425
+STATUS_426_UPGRADE_REQUIRED = 426
+STATUS_428_PRECONDITION_REQUIRED = 428
+STATUS_429_TOO_MANY_REQUESTS = 429
+STATUS_431_REQUEST_HEADER_FIELDS_TOO_LARGE = 431
+STATUS_451_UNAVAILABLE_FOR_LEGAL_REASONS = 451
+STATUS_500_INTERNAL_SERVER_ERROR = 500
+STATUS_501_NOT_IMPLEMENTED = 501
+STATUS_502_BAD_GATEWAY = 502
+STATUS_503_SERVICE_UNAVAILABLE = 503
+STATUS_504_GATEWAY_TIMEOUT = 504
+STATUS_505_HTTP_VERSION_NOT_SUPPORTED = 505
+STATUS_506_VARIANT_ALSO_NEGOTIATES = 506
+STATUS_507_INSUFFICIENT_STORAGE = 507
+STATUS_508_LOOP_DETECTED = 508
+STATUS_510_NOT_EXTENDED = 510
+STATUS_511_NETWORK_AUTHENTICATION_REQUIRED = 511
 
-class Response:
-    def __init__(self):
-        self.code = 200
-        self.body = None
-        self.headers = {}
-
-class RequestBuilder:
-    def __call__(self, env: dict) -> Request:
-        raise Exception("{}.__call__(env: dict) must be implemented".format(fqn(self)))
-
-class ResponseBuilder:
-    def __call__(self) -> Response:
-        raise Exception("{}.__call__() must be implemented".format(fqn(self)))
-
-class DefaultRequestBuilder(RequestBuilder):
-    def __call__(self, env):
-        return Request(env)
-
-class DefaultResponseBuilder(ResponseBuilder):
-    def __call__(self):
-        return Response()
+HEADER_ACCEPT = "Accept"
+HEADER_ACCEPT_CHARSET = "Accept-Charset"
+HEADER_ACCEPT_ENCODING = "Accept-Encoding"
+HEADER_ACCEPT_LANGUAGE = "Accept-Language"
+HEADER_ACCEPT_RANGES = "Accept-Ranges"
+HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials"
+HEADER_ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers"
+HEADER_ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods"
+HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin"
+HEADER_ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers"
+HEADER_ACCESS_CONTROL_MAX_AGE = "Access-Control-Max-Age"
+HEADER_ACCESS_CONTROL_REQUEST_HEADERS = "Access-Control-Request-Headers"
+HEADER_ACCESS_CONTROL_REQUEST_METHOD = "Access-Control-Request-Method"
+HEADER_AGE = "Age"
+HEADER_ALLOW = "Allow"
+HEADER_ALT_SVC = "Alt-Svc"
+HEADER_AUTHORIZATION = "Authorization"
+HEADER_CACHE_CONTROL = "Cache-Control"
+HEADER_CLEAR_SITE_DATA = "Clear-Site-Data"
+HEADER_CONNECTION = "Connection"
+HEADER_CONTENT_DISPOSITION = "Content-Disposition"
+HEADER_CONTENT_ENCODING = "Content-Encoding"
+HEADER_CONTENT_LANGUAGE = "Content-Language"
+HEADER_CONTENT_LENGTH = "Content-Length"
+HEADER_CONTENT_LOCATION = "Content-Location"
+HEADER_CONTENT_RANGE = "Content-Range"
+HEADER_CONTENT_SECURITY_POLICY = "Content-Security-Policy"
+HEADER_CONTENT_SECURITY_POLICY_REPORT_ONLY = "Content-Security-Policy-Report-Only"
+HEADER_CONTENT_TYPE = "Content-Type"
+HEADER_COOKIE = "Cookie"
+HEADER_DNT = "DNT"
+HEADER_DATE = "Date"
+HEADER_ETAG = "ETag"
+HEADER_EARLY_DATA = "Early-Data"
+HEADER_EXPECT = "Expect"
+HEADER_EXPECT_CT = "Expect-CT"
+HEADER_EXPIRES = "Expires"
+HEADER_FEATURE_POLICY = "Feature-Policy"
+HEADER_FORWARDED = "Forwarded"
+HEADER_FROM = "From"
+HEADER_HOST = "Host"
+HEADER_IF_MATCH = "If-Match"
+HEADER_IF_MODIFIED_SINCE = "If-Modified-Since"
+HEADER_IF_NONE_MATCH = "If-None-Match"
+HEADER_IF_RANGE = "If-Range"
+HEADER_IF_UNMODIFIED_SINCE = "If-Unmodified-Since"
+HEADER_INDEX = "Index"
+HEADER_KEEP_ALIVE = "Keep-Alive"
+HEADER_LARGE_ALLOCATION = "Large-Allocation"
+HEADER_LAST_MODIFIED = "Last-Modified"
+HEADER_LOCATION = "Location"
+HEADER_ORIGIN = "Origin"
+HEADER_PRAGMA = "Pragma"
+HEADER_PROXY_AUTHENTICATE = "Proxy-Authenticate"
+HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization"
+HEADER_PUBLIC_KEY_PINS = "Public-Key-Pins"
+HEADER_PUBLIC_KEY_PINS_REPORT_ONLY = "Public-Key-Pins-Report-Only"
+HEADER_RANGE = "Range"
+HEADER_REFERER = "Referer"
+HEADER_REFERRER_POLICY = "Referrer-Policy"
+HEADER_RETRY_AFTER = "Retry-After"
+HEADER_SEC_WEBSOCKET_ACCEPT = "Sec-WebSocket-Accept"
+HEADER_SERVER = "Server"
+HEADER_SERVER_TIMING = "Server-Timing"
+HEADER_SET_COOKIE = "Set-Cookie"
+HEADER_SET_COOKIE2 = "Set-Cookie2"
+HEADER_SOURCEMAP = "SourceMap"
+HEADER_STRICT_TRANSPORT_SECURITY = "Strict-Transport-Security"
+HEADER_TE = "TE"
+HEADER_TIMING_ALLOW_ORIGIN = "Timing-Allow-Origin"
+HEADER_TK = "Tk"
+HEADER_TRAILER = "Trailer"
+HEADER_TRANSFER_ENCODING = "Transfer-Encoding"
+HEADER_UPGRADE_INSECURE_REQUESTS = "Upgrade-Insecure-Requests"
+HEADER_USER_AGENT = "User-Agent"
+HEADER_VARY = "Vary"
+HEADER_VIA = "Via"
+HEADER_WWW_AUTHENTICATE = "WWW-Authenticate"
+HEADER_WARNING = "Warning"
+HEADER_X_CONTENT_TYPE_OPTIONS = "X-Content-Type-Options"
+HEADER_X_DNS_PREFETCH_CONTROL = "X-DNS-Prefetch-Control"
+HEADER_X_FORWARDED_FOR = "X-Forwarded-For"
+HEADER_X_FORWARDED_HOST = "X-Forwarded-Host"
+HEADER_X_FORWARDED_PROTO = "X-Forwarded-Proto"
+HEADER_X_FRAME_OPTIONS = "X-Frame-Options"
+HEADER_X_XSS_PROTECTION = "X-XSS-Protection"

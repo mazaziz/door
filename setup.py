@@ -2,8 +2,8 @@ import setuptools
 
 setuptools.setup(
     name="door",
-    version="0.1.0",
-    description="extensible wsgi micro framework for high-performance microservices",
+    version="0.2.0",
+    description="lightweight extensible http microframework",
     author="Aziz Maz",
     author_email="mazaziz@gmail.com",
     license="Apache Software License",

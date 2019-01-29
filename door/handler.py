@@ -1,26 +1,20 @@
-from .http import METHODS, Request, Response
-from .util import fqn
-from .error import HttpMethodNotAllowed
+from door import http, response
 
-class Handler:
-    def __call__(self, req, resp, *args):
-        raise Exception("{}.__call__(req, resp, *args) must be implemented".format(fqn(self)))
-
-class RestResouce(Handler):
+class RestResource:
     def __init__(self):
         self._handlers = {}
-        for http_method in METHODS:
+        for method in http.METHODS:
             try:
-                handler =  getattr(self, "on_{}".format(http_method.lower()))
+                handler =  getattr(self, f"on_{method.lower()}")
             except AttributeError:
                 continue
             if not callable(handler):
-                raise Exception("{} is not callable".format(handler))
-            self._handlers[http_method] = handler
+                raise Exception(f"{handler} is not callable")
+            self._handlers[method] = handler
 
-    def __call__(self, req: Request, resp: Response, *args):
+    def __call__(self, req):
         try:
             handler = self._handlers[req.method]
         except KeyError:
-            raise HttpMethodNotAllowed(self._handlers.keys())
-        handler(req, resp, *args)
+            return response.Blank(405, headers={"Allow": ", ".join(self._handlers.keys())})
+        return handler(req)
